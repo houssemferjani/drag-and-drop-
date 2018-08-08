@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="dragtable.js" >
+    </script>
+    <script>
+        function test() {
+            var x = document.getElementById("nom").value;
+            var x1 = document.getElementById("prix").value;
+            var x2 = document.getElementById("qn").value;
+            var y1 = parseInt(x1);
+            var y2 = parseInt(x2);
+            var table = document.getElementById("table");
+            var row = table.insertRow(1);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            cell1.innerHTML = x;
+            cell2.innerHTML = y1;
+            cell3.innerHTML = y2;
+            cell4.innerHTML = y2 * y1;
+            cell5.innerHTML = y2 * y1 + y1 * y2 * 0.18;
+
+
+        }
+    
+        function downloadCSV(csv, filename) {
+            var csvFile;
+            var downloadLink;
+
+            csvFile = new Blob([csv], { type: "text/csv" });
+
+            downloadLink = document.createElement("a");
+
+            downloadLink.download = filename;
+
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+
+            downloadLink.style.display = "none";
+
+            document.body.appendChild(downloadLink);
+
+            downloadLink.click();
+        }
+        function exportTableToCSV(filename) {
+            var csv = [];
+            var rows = document.querySelectorAll("table tr");
+
+            for (var i = 0; i < rows.length; i++) {
+                var row = [], cols = rows[i].querySelectorAll("td, th");
+
+                for (var j = 0; j < cols.length; j++)
+                    row.push(cols[j].innerText);
+
+                csv.push(row.join("                                    "));
+            }
+
+            // Download CSV file
+            downloadCSV(csv.join("\n"), filename);
+        }
+    </script>
+    <style>
+        .c {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <center>
+        <h2>NOM PRODUIT</h2>
+        <input type="text" placeholder="product name" id="nom">
+        <h2>PRIX PRODUIT</h2>
+        <input type="text" placeholder="product price" id="prix">
+        <h2>QUANTITS PRODUIT</h2>
+        <input type="text" placeholder="product number" id="qn">
+        <br>
+        <br>
+        <input type="button" value="VALID" onclick="test()">
+
+
+    </center>
+    <br>
+    <br>
+    <br>
+    <table border="1" class="draggable c" id="table" class="draggable" cellpadding=2  style="background:#f3f3f3">
+
+        <tr>
+            <th id="x" > NAME </th>
+            <th> PRICE </th>
+            <th> NUMBER </th>
+            <th> PRICE HT </th>
+            <th> PRICE TOT </th>
+
+        </tr>
+    </table>
+    <br>    <br>    <br>
+    <center>
+    <button onclick="exportTableToCSV('members.csv')">download file</button>
+</center>
+</body>
+
+</html>
